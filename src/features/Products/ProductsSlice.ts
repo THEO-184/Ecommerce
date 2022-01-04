@@ -21,7 +21,7 @@ export const fetchProducts = createAsyncThunk(
 		const contentfulProducts = allProducts[0].items;
 		const fakeStoreProducts = await allProducts[1].json();
 		const combinedProducts = contentfulProducts.concat(fakeStoreProducts);
-		console.log(contentfulProducts);
+		// console.log(fakeStoreProducts);
 
 		return combinedProducts;
 	}
@@ -59,7 +59,7 @@ const ProductsSlice = createSlice({
 							} = product;
 							return { id, title, price, image, total: 0, description };
 						} else {
-							const { id, title, price, image, description } = product;
+							const { title, price, image, description } = product;
 							return { id, title, price, image, total: 0, description };
 						}
 					}

@@ -9,9 +9,24 @@ import {
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { ProductType } from "../../../types";
 import { Box } from "@mui/system";
-
+import { useAppSelector, useAppDispatch } from "../../../app/hooks";
+import { selectProducts } from "../../../features/Products/ProductsSlice";
+import { ADD_TO_CART } from "../../../features/CartSlice";
+// ====COMPONENT =====
 const Product = (props: ProductType) => {
-	const { title, price, image, description } = props;
+	const { id, title, price, image, description } = props;
+	const PRODUCTS = useAppSelector(selectProducts);
+
+	const dispatch = useAppDispatch();
+
+	// Add To Cart
+	const handleAddToCart = () => {
+		PRODUCTS.map((product) => {
+			if (product.id === id) {
+				dispatch(ADD_TO_CART(product));
+			} else return;
+		});
+	};
 	return (
 		<Box>
 			<Card sx={{ maxWidth: "100%" }}>
@@ -46,6 +61,7 @@ const Product = (props: ProductType) => {
 						variant="text"
 						disableElevation
 						sx={{ "&:hover": { background: 0 } }}
+						onClick={() => handleAddToCart()}
 					>
 						<ShoppingCartOutlinedIcon sx={{ color: "#000" }} />
 					</Button>

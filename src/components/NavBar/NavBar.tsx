@@ -11,9 +11,14 @@ import {
 	Menu,
 } from "@mui/material";
 import { Avatar } from "@mui/material";
+import { selectTotalItems } from "../../features/CartSlice";
 import CustomizedMenus from "../menu/menu";
+import { useAppSelector } from "../../app/hooks";
+import { Link } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
 const NavBar = () => {
+	const Total = useAppSelector(selectTotalItems);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
 		React.useState<null | HTMLElement>(null);
@@ -74,11 +79,14 @@ const NavBar = () => {
 							size="large"
 							aria-label="show 17 new notifications"
 							color="inherit"
+							LinkComponent={Link}
+							href="/products"
 						>
-							<Badge badgeContent={17} color="error">
+							<Badge badgeContent={Total} color="error">
 								<ShoppingCartIcon />
 							</Badge>
 						</IconButton>
+
 						<IconButton
 							size="large"
 							edge="end"

@@ -1,12 +1,19 @@
-import { Container, Typography } from "@mui/material";
 import React, { useEffect } from "react";
-import { fetchProducts } from "./features/Products/ProductsSlice";
+import {
+	fetchProducts,
+	selectProducts,
+} from "./features/Products/ProductsSlice";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { render } from "react-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar/NavBar";
 import { makeStyles } from "@mui/styles";
 import { createTheme } from "@mui/material";
 import Products from "./components/Products/AllProducts/Products";
-import { Box } from "@mui/system";
+import { selectCartItems } from "./features/CartSlice";
+import CartItems from "./components/Cart/CartItems";
+// Theme
+
 const theme = createTheme();
 const useStyles = makeStyles(() => ({
 	offset: {
@@ -31,9 +38,12 @@ function App() {
 		<div className="App">
 			<NavBar />
 			<AppBarOffset />
-			<Box component="main" sx={{ mx: 2 }}>
-				<Products />
-			</Box>
+			<Router>
+				<Routes>
+					<Route path="/" element={<Products />}></Route>
+					<Route path="/products" element={<CartItems />} />
+				</Routes>
+			</Router>
 		</div>
 	);
 }

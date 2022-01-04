@@ -6,11 +6,11 @@ import {
 } from "../../../features/Products/ProductsSlice";
 import Product from "../Product/Product";
 import { CircularProgress, Box } from "@mui/material";
+// import { Link } from "react-router-dom";
 
 const Products = () => {
 	const PRODUCTS = useAppSelector(selectProducts);
 	const LOADING = useAppSelector(selectLoading);
-	console.log(PRODUCTS);
 
 	if (LOADING === "loading") {
 		return (
@@ -28,7 +28,7 @@ const Products = () => {
 	}
 
 	return (
-		<Container disableGutters maxWidth="xl">
+		<Box component="main" sx={{ mx: 2 }}>
 			<Grid container spacing={2}>
 				{PRODUCTS?.map((product, id) => (
 					<Grid item xs={12} sm={6} md={4} lg={3} key={id}>
@@ -36,7 +36,7 @@ const Products = () => {
 					</Grid>
 				))}
 			</Grid>
-		</Container>
+		</Box>
 	);
 };
 

@@ -11,3 +11,8 @@ export interface ProductsState {
 	products: ProductType[];
 	loading: "loading" | "success" | "failed" | "idle";
 }
+
+export interface CartState {
+	cartItem: ProductType[];
+	TotalItems: number;
+}
