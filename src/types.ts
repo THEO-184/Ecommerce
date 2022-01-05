@@ -5,6 +5,7 @@ export interface ProductType {
 	image: string;
 	total: number;
 	description?: string;
+	disabled: boolean;
 }
 
 export interface ProductsState {
@@ -15,4 +16,5 @@ export interface ProductsState {
 export interface CartState {
 	cartItem: ProductType[];
 	TotalItems: number;
+	TotalPrice: number;
 }

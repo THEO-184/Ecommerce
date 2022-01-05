@@ -14,14 +14,22 @@ import { Avatar } from "@mui/material";
 import { selectTotalItems } from "../../features/CartSlice";
 import CustomizedMenus from "../menu/menu";
 import { useAppSelector } from "../../app/hooks";
-import { Link } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import {
+	Link as RouterLink,
+	LinkProps as RouterLinkProps,
+	MemoryRouter,
+} from "react-router-dom";
+import { selectTotalPrice } from "../../features/CartSlice";
 
+// COMPONENTS
 const NavBar = () => {
 	const Total = useAppSelector(selectTotalItems);
+	const TOTALPRICE = useAppSelector(selectTotalPrice);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
 		React.useState<null | HTMLElement>(null);
+	const location = useLocation();
 
 	const isMenuOpen = Boolean(anchorEl);
 	const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -75,17 +83,27 @@ const NavBar = () => {
 					<Box sx={{ flexGrow: 1 }} />
 
 					<Box>
-						<IconButton
-							size="large"
-							aria-label="show 17 new notifications"
-							color="inherit"
-							LinkComponent={Link}
-							href="/products"
-						>
-							<Badge badgeContent={Total} color="error">
-								<ShoppingCartIcon />
-							</Badge>
-						</IconButton>
+						{location.pathname === "/" ? (
+							<IconButton
+								size="large"
+								aria-label="show 17 new notifications"
+								color="inherit"
+								component={RouterLink}
+								to="products"
+							>
+								<Badge badgeContent={Total} color="error">
+									<ShoppingCartIcon />
+								</Badge>
+							</IconButton>
+						) : (
+							<Typography
+								variant="body2"
+								component={"span"}
+								sx={{ mr: 1, color: "#000" }}
+							>
+								TotalPrice: ${Math.abs(TOTALPRICE).toFixed(2)}
+							</Typography>
+						)}
 
 						<IconButton
 							size="large"

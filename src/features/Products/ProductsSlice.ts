@@ -1,6 +1,7 @@
 import { ProductsState, ProductType } from "../../types";
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 // get products from Contentful
 const contentful = require("contentful");
@@ -34,7 +35,16 @@ const initialState: ProductsState = {
 const ProductsSlice = createSlice({
 	name: "Products",
 	initialState,
-	reducers: {},
+	reducers: {
+		DISABLE_BUTTON: (state, action: PayloadAction<number>) => {
+			state.products = state.products.map((product) => {
+				if (product.id === action.payload) {
+					return { ...product, disabled: !product.disabled };
+				}
+				return product;
+			});
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(fetchProducts.pending, (state, action) => {
@@ -57,10 +67,26 @@ const ProductsSlice = createSlice({
 									},
 								},
 							} = product;
-							return { id, title, price, image, total: 0, description };
+							return {
+								id,
+								title,
+								price,
+								image,
+								total: 0,
+								description,
+								disabled: false,
+							};
 						} else {
 							const { title, price, image, description } = product;
-							return { id, title, price, image, total: 0, description };
+							return {
+								id,
+								title,
+								price,
+								image,
+								total: 0,
+								description,
+								disabled: false,
+							};
 						}
 					}
 				);
@@ -75,5 +101,5 @@ const ProductsSlice = createSlice({
 export const selectProducts = (state: RootState) => state.products.products;
 export const selectLoading = (state: RootState) => state.products.loading;
 
-export const {} = ProductsSlice.actions;
+export const { DISABLE_BUTTON } = ProductsSlice.actions;
 export default ProductsSlice.reducer;
