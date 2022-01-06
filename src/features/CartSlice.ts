@@ -31,10 +31,11 @@ const CartSlice = createSlice({
 		DECREASE_ITEM: (state, action: PayloadAction<number>) => {
 			state.cartItem = state.cartItem.map((item) => {
 				if (item.id === action.payload) {
-					if (item.total === 0) {
+					if (item.total === 1) {
 						state.TotalItems -= 1;
+						return { ...item, total: 1 };
 					}
-					if (item.total > 0) {
+					if (item.total > 1) {
 						state.TotalPrice -= item.price;
 						return { ...item, total: (item.total -= 1) };
 					}

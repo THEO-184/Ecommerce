@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import {
 	selectCartItems,
 	selectTotalPrice,
@@ -7,7 +9,10 @@ import {
 	DELETE_ITEM,
 	CLEAR_CART,
 } from "../../features/CartSlice";
-import { DISABLE_BUTTON } from "../../features/Products/ProductsSlice";
+import {
+	DISABLE_BUTTON,
+	RESET_BUTTONS,
+} from "../../features/Products/ProductsSlice";
 import {
 	Button,
 	Card,
@@ -30,6 +35,7 @@ import { flex } from "./Cart";
 
 // Compoent
 const CartItems = () => {
+	const navigate = useNavigate();
 	const PRODUCTS = useAppSelector(selectCartItems);
 	const TOTAL = useAppSelector(selectTotalPrice);
 	const dispatch = useAppDispatch();
@@ -44,12 +50,24 @@ const CartItems = () => {
 	};
 	// delete Item;
 	const handleDeleteItem = (id: number): void => {
+		if (PRODUCTS.length === 1) {
+			setTimeout(() => {
+				navigate("/");
+			}, 500);
+		}
+		console.log(PRODUCTS.length);
+
 		dispatch(DELETE_ITEM(id));
+
 		dispatch(DISABLE_BUTTON(id));
 	};
 	// empty cart
 	const handleEmptyCart = (): void => {
 		dispatch(CLEAR_CART());
+		dispatch(RESET_BUTTONS());
+		setTimeout(() => {
+			navigate("/");
+		}, 500);
 	};
 
 	if (!PRODUCTS.length) {
@@ -75,7 +93,13 @@ const CartItems = () => {
 				>
 					EMPTY CART
 				</Button>
-				<Button color="info" variant="contained" size="small">
+				<Button
+					color="info"
+					variant="contained"
+					size="small"
+					component={RouterLink}
+					to="/checkout"
+				>
 					CHECKOUT
 				</Button>
 			</Box>

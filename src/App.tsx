@@ -12,37 +12,9 @@ import { createTheme } from "@mui/material";
 import Products from "./components/Products/AllProducts/Products";
 import { selectCartItems } from "./features/CartSlice";
 import CartItems from "./components/Cart/CartItems";
+import Checkout from "./components/Checkout/Checkout";
 // Theme
-import {
-	Link as RouterLink,
-	LinkProps as RouterLinkProps,
-	MemoryRouter,
-} from "react-router-dom";
-
-const LinkBehavior = React.forwardRef<
-	any,
-	Omit<RouterLinkProps, "to"> & { href: RouterLinkProps["to"] }
->((props, ref) => {
-	const { href, ...other } = props;
-	// Map href (Material-UI) -> to (react-router)
-	return <RouterLink ref={ref} to={href} {...other} />;
-});
 const theme = createTheme();
-
-// const theme = createTheme({
-// 	components: {
-// 		MuiLink: {
-// 			defaultProps: {
-// 				component: LinkBehavior,
-// 			} as RouterLinkProps,
-// 		},
-// 		MuiButtonBase: {
-// 			defaultProps: {
-// 				LinkComponent: LinkBehavior,
-// 			},
-// 		},
-// 	},
-// });
 const useStyles = makeStyles(() => ({
 	offset: {
 		...theme.mixins.toolbar,
@@ -52,6 +24,7 @@ const useStyles = makeStyles(() => ({
 
 function App() {
 	const dispatch = useAppDispatch();
+
 	useEffect(() => {
 		dispatch(fetchProducts());
 	}, []);
@@ -70,6 +43,7 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Products />}></Route>
 					<Route path="products" element={<CartItems />} />
+					<Route path="checkout" element={<Checkout />}></Route>
 				</Routes>
 			</Router>
 		</div>

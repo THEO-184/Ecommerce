@@ -44,6 +44,11 @@ const ProductsSlice = createSlice({
 				return product;
 			});
 		},
+		RESET_BUTTONS: (state) => {
+			state.products = state.products.map((product) => {
+				return { ...product, disabled: false };
+			});
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -101,5 +106,5 @@ const ProductsSlice = createSlice({
 export const selectProducts = (state: RootState) => state.products.products;
 export const selectLoading = (state: RootState) => state.products.loading;
 
-export const { DISABLE_BUTTON } = ProductsSlice.actions;
+export const { DISABLE_BUTTON, RESET_BUTTONS } = ProductsSlice.actions;
 export default ProductsSlice.reducer;

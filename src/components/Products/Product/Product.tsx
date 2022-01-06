@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
 	Button,
 	Card,
@@ -15,13 +16,14 @@ import {
 	selectProducts,
 	DISABLE_BUTTON,
 } from "../../../features/Products/ProductsSlice";
-import { ADD_TO_CART, INCREASE_ITEM } from "../../../features/CartSlice";
+import { ADD_TO_CART, selectCartItems } from "../../../features/CartSlice";
 import { flex } from "./Product.styles";
 
 // ====COMPONENT =====
 const Product = (props: ProductType) => {
 	const { id, title, price, image, description, disabled } = props;
 	const PRODUCTS = useAppSelector(selectProducts);
+	const CART_ITEMS = useAppSelector(selectCartItems);
 	const dispatch = useAppDispatch();
 
 	// Add To Cart
@@ -29,7 +31,6 @@ const Product = (props: ProductType) => {
 		PRODUCTS.map((product) => {
 			if (product.id === id) {
 				dispatch(ADD_TO_CART(product));
-				// dispatch(INCREASE_ITEM(id));
 				dispatch(DISABLE_BUTTON(id));
 			} else return;
 		});
