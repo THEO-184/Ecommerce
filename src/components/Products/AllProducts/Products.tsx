@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { Container, Grid, Typography } from "@mui/material";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../../app/hooks";
+import { fireStoreProductType } from "../../../types";
 import {
 	selectProducts,
 	selectLoading,
+	selectIsReload,
+	LOAD_ITEMS_TOCART,
 } from "../../../features/Products/ProductsSlice";
+import { colRef } from "../../../firebase-config";
+import { query, onSnapshot, orderBy } from "firebase/firestore";
 import Product from "../Product/Product";
 import { CircularProgress, Box } from "@mui/material";
 // import { Link } from "react-router-dom";
@@ -12,6 +17,35 @@ import { CircularProgress, Box } from "@mui/material";
 const Products = () => {
 	const PRODUCTS = useAppSelector(selectProducts);
 	const LOADING = useAppSelector(selectLoading);
+	const isReload = useAppSelector(selectIsReload);
+	const [Products, setProducts] = useState<fireStoreProductType[]>([]);
+	const dispatch = useAppDispatch();
+
+	// get Data
+	useEffect(() => {
+		// const abortController = new AbortController();
+		const q = query(colRef, orderBy("Title"));
+		const unSuscribe = onSnapshot(q, (snapshot) => {
+			let productsFire: fireStoreProductType[] = [];
+			snapshot.docs.forEach((doc) => {
+				productsFire.push({
+					id: doc.id,
+					title: doc.data().Title,
+					description: doc.data().description,
+					image: doc.data().image,
+					disabled: doc.data().isAdded,
+					price: doc.data().price,
+					total: 0,
+				});
+			});
+
+			setProducts(productsFire);
+			dispatch(LOAD_ITEMS_TOCART(productsFire));
+		});
+		return () => unSuscribe();
+	}, [isReload]);
+
+	console.log(isReload);
 
 	if (LOADING === "loading") {
 		return (
@@ -31,8 +65,8 @@ const Products = () => {
 	return (
 		<Box component="main" sx={{ mx: 2 }}>
 			<Grid container spacing={2}>
-				{PRODUCTS?.map((product, id) => (
-					<Grid item xs={12} sm={6} md={4} lg={3} key={id}>
+				{PRODUCTS?.map((product) => (
+					<Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
 						<Product {...product} />
 					</Grid>
 				))}

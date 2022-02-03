@@ -9,18 +9,17 @@ import {
 	Typography,
 } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import { ProductType } from "../../../types";
+import { fireStoreProductType, ProductType } from "../../../types";
+import { doc, updateDoc, query, onSnapshot, getDoc } from "firebase/firestore";
 import { Box } from "@mui/system";
 import { useAppSelector, useAppDispatch } from "../../../app/hooks";
-import {
-	selectProducts,
-	DISABLE_BUTTON,
-} from "../../../features/Products/ProductsSlice";
+import { selectProducts } from "../../../features/Products/ProductsSlice";
 import { ADD_TO_CART, selectCartItems } from "../../../features/CartSlice";
 import { flex } from "./Product.styles";
+import db from "../../../firebase-config";
 
 // ====COMPONENT =====
-const Product = (props: ProductType) => {
+const Product = (props: fireStoreProductType) => {
 	const { id, title, price, image, description, disabled } = props;
 	const PRODUCTS = useAppSelector(selectProducts);
 	const CART_ITEMS = useAppSelector(selectCartItems);
@@ -28,11 +27,16 @@ const Product = (props: ProductType) => {
 
 	// Add To Cart
 	const handleAddToCart = () => {
+		// get document from firebase
+		const docRef = doc(db, "products", id);
+		updateDoc(docRef, {
+			isAdded: !disabled,
+		});
+
 		PRODUCTS.map((product) => {
 			if (product.id === id) {
 				dispatch(ADD_TO_CART(product));
-				dispatch(DISABLE_BUTTON(id));
-			} else return;
+			}
 		});
 	};
 	return (

@@ -1,6 +1,7 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
 import {
 	Box,
 	Toolbar,
@@ -9,6 +10,7 @@ import {
 	Badge,
 	MenuItem,
 	Menu,
+	Button,
 } from "@mui/material";
 import { Avatar } from "@mui/material";
 import { selectTotalItems } from "../../features/CartSlice";
@@ -105,7 +107,7 @@ const NavBar = () => {
 							</Typography>
 						)}
 
-						<IconButton
+						{/* <IconButton
 							size="large"
 							edge="end"
 							aria-label="account of current user"
@@ -121,8 +123,11 @@ const NavBar = () => {
 									"&:hover": { background: "#fff" },
 								}}
 							/>
-						</IconButton>
+						</IconButton> */}
 					</Box>
+					<Button variant="contained" component={RouterLink} to="login">
+						Login
+					</Button>
 				</Toolbar>
 			</AppBar>
 			<CustomizedMenus />

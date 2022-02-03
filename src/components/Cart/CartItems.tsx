@@ -1,6 +1,15 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Link as RouterLink } from "react-router-dom";
+
+import {
+	doc,
+	updateDoc,
+	query,
+	orderBy,
+	onSnapshot,
+	where,
+} from "firebase/firestore";
+import db, { colRef } from "../../firebase-config";
 import {
 	selectCartItems,
 	selectTotalPrice,
@@ -9,10 +18,6 @@ import {
 	DELETE_ITEM,
 	CLEAR_CART,
 } from "../../features/CartSlice";
-import {
-	DISABLE_BUTTON,
-	RESET_BUTTONS,
-} from "../../features/Products/ProductsSlice";
 import {
 	Button,
 	Card,
@@ -24,13 +29,18 @@ import {
 	Box,
 	Container,
 	Grid,
-	ButtonGroup,
 } from "@mui/material";
+import {
+	LOAD_ITEMS_TOCART,
+	RELOAD_ITEMS,
+	selectIsReload,
+} from "../../features/Products/ProductsSlice";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { flex } from "./Cart";
+import { fireStoreProductType } from "../../types";
 // export { flex } from "./Cart";
 
 // Compoent
@@ -41,33 +51,49 @@ const CartItems = () => {
 	const dispatch = useAppDispatch();
 
 	// Increase Item
-	const handleIncreaseItem = (id: number): void => {
+	const handleIncreaseItem = (id: string): void => {
 		dispatch(INCREASE_ITEM(id));
 	};
+
 	// decrease Item
-	const handleDecreaseItem = (id: number): void => {
+	const handleDecreaseItem = (id: string): void => {
 		dispatch(DECREASE_ITEM(id));
 	};
+
 	// delete Item;
-	const handleDeleteItem = (id: number): void => {
+	const handleDeleteItem = (id: string): void => {
+		// delete item from cart
+		dispatch(DELETE_ITEM(id));
+
+		// reset product's disabled button from  firebase
+		const docRef = doc(db, "products", id);
+		updateDoc(docRef, {
+			isAdded: false,
+		});
 		if (PRODUCTS.length === 1) {
 			setTimeout(() => {
 				navigate("/");
 			}, 500);
 		}
-		console.log(PRODUCTS.length);
-
-		dispatch(DELETE_ITEM(id));
-
-		dispatch(DISABLE_BUTTON(id));
 	};
+
 	// empty cart
-	const handleEmptyCart = (): void => {
+	const handleEmptyCart = (): any => {
+		const productsRef = query(colRef);
+		onSnapshot(productsRef, (snapshot) => {
+			snapshot.docs.map((document) => {
+				const docRef = doc(db, "products", document.id);
+				updateDoc(docRef, {
+					isAdded: false,
+				});
+			});
+		});
 		dispatch(CLEAR_CART());
-		dispatch(RESET_BUTTONS());
+		dispatch(RELOAD_ITEMS(true));
 		setTimeout(() => {
 			navigate("/");
 		}, 500);
+		// return () => unSub();
 	};
 
 	if (!PRODUCTS.length) {
@@ -92,15 +118,6 @@ const CartItems = () => {
 					onClick={handleEmptyCart}
 				>
 					EMPTY CART
-				</Button>
-				<Button
-					color="info"
-					variant="contained"
-					size="small"
-					component={RouterLink}
-					to="/checkout"
-				>
-					CHECKOUT
 				</Button>
 			</Box>
 
