@@ -1,5 +1,5 @@
 import { RootState } from "./../app/store";
-import { ProductType } from "./../types";
+import { fireStoreProductType, ProductType } from "./../types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CartState } from "../types";
 import { iteratorSymbol } from "immer/dist/internal";
@@ -14,12 +14,12 @@ const CartSlice = createSlice({
 	name: "cart",
 	initialState,
 	reducers: {
-		ADD_TO_CART: (state, action: PayloadAction<ProductType>) => {
+		ADD_TO_CART: (state, action: PayloadAction<fireStoreProductType>) => {
 			state.cartItem.push({ ...action.payload, total: 1 });
 			state.TotalItems += 1;
 			state.TotalPrice += action.payload.price;
 		},
-		INCREASE_ITEM: (state, action: PayloadAction<number>) => {
+		INCREASE_ITEM: (state, action: PayloadAction<string>) => {
 			state.cartItem = state.cartItem.map((item) => {
 				if (item.id === action.payload) {
 					state.TotalPrice += item.price;
@@ -28,22 +28,23 @@ const CartSlice = createSlice({
 				return item;
 			});
 		},
-		DECREASE_ITEM: (state, action: PayloadAction<number>) => {
+		DECREASE_ITEM: (state, action: PayloadAction<string>) => {
 			state.cartItem = state.cartItem.map((item) => {
 				if (item.id === action.payload) {
 					if (item.total === 1) {
-						state.TotalItems -= 1;
+						// state.TotalItems -= 1;
 						return { ...item, total: 1 };
 					}
 					if (item.total > 1) {
 						state.TotalPrice -= item.price;
+						state.TotalItems -= 1;
 						return { ...item, total: (item.total -= 1) };
 					}
 				}
 				return item;
 			});
 		},
-		DELETE_ITEM: (state, action: PayloadAction<number>) => {
+		DELETE_ITEM: (state, action: PayloadAction<string>) => {
 			// deduct the total price of item from Total Price
 			state.TotalPrice = state.cartItem
 				.filter((item) => item.id === action.payload)
@@ -56,7 +57,7 @@ const CartSlice = createSlice({
 			state.cartItem = state.cartItem.filter(
 				(item) => item.id !== action.payload
 			);
-			// decrease the total number of items
+			// decrease the total string of items
 			state.TotalItems = state.TotalItems > 0 ? (state.TotalItems -= 1) : 0;
 		},
 		CLEAR_CART: (state) => {

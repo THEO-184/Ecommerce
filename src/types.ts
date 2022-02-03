@@ -1,5 +1,5 @@
 export interface ProductType {
-	id: number;
+	id: string;
 	title: string;
 	price: number;
 	image: string;
@@ -8,9 +8,20 @@ export interface ProductType {
 	disabled: boolean;
 }
 
+export interface fireStoreProductType {
+	id: string;
+	title: string;
+	description: string;
+	image: string;
+	disabled: boolean;
+	price: number;
+	total: number;
+}
+
 export interface ProductsState {
-	products: ProductType[];
+	products: fireStoreProductType[];
 	loading: "loading" | "success" | "failed" | "idle";
+	isReloadItems: boolean;
 }
 
 export interface CartState {

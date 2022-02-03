@@ -9,6 +9,7 @@ import {
 	Badge,
 	MenuItem,
 	Menu,
+	Button,
 } from "@mui/material";
 import { Avatar } from "@mui/material";
 import { selectTotalItems } from "../../features/CartSlice";
@@ -105,7 +106,7 @@ const NavBar = () => {
 							</Typography>
 						)}
 
-						<IconButton
+						{/* <IconButton
 							size="large"
 							edge="end"
 							aria-label="account of current user"
@@ -121,8 +122,11 @@ const NavBar = () => {
 									"&:hover": { background: "#fff" },
 								}}
 							/>
-						</IconButton>
+						</IconButton> */}
 					</Box>
+					<Button variant="contained" component={RouterLink} to="login">
+						Login
+					</Button>
 				</Toolbar>
 			</AppBar>
 			<CustomizedMenus />
