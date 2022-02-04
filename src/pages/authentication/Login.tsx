@@ -1,10 +1,30 @@
-import React from "react";
+import { useState } from "react";
+import {
+	getAuth,
+	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword,
+	signInWithPopup,
+	GoogleAuthProvider,
+	AuthErrorCodes,
+} from "firebase/auth";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Container, Paper, Typography, Box, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import GoogleIcon from "@mui/icons-material/Google";
+import { SET_USER } from "../../features/Products/ProductsSlice";
+import { useAppDispatch } from "../../app/store";
+import { useNavigate } from "react-router-dom";
+import { Link } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
+
+// authenticate
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
+provider.setCustomParameters({
+	login_hint: "user@example.com",
+});
 
 interface IFormInput {
 	email: string;
@@ -21,11 +41,7 @@ const schema = yup.object({
 		.required(
 			"password must contain atleast 8 characters with atleast 1 uppercase,1 lowercase and 1 special character"
 		)
-		.min(8)
-		.matches(
-			/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-			"password must contain atleast 8 characters with atleast 1 uppercase,1 lowercase and 1 special character"
-		),
+		.min(8),
 });
 
 const SignInBtn = styled("button")({
@@ -47,24 +63,84 @@ const SignInBtn = styled("button")({
 });
 
 const Login = () => {
+	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+	const [error, setError] = useState("");
 	const {
 		control,
 		handleSubmit,
+		reset,
 		formState: { errors },
 	} = useForm<IFormInput>({
 		resolver: yupResolver(schema),
+		defaultValues: {
+			email: "",
+			password: "",
+		},
 	});
-	const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+
+	const handleError = (error: any) => {
+		if (error.code === AuthErrorCodes.USER_DELETED) {
+			setError("User Not Found. Sign In");
+		}
+		if (error.code === AuthErrorCodes.INVALID_PASSWORD) {
+			setError("Invalid Password");
+		}
+		if (error.code === AuthErrorCodes.INVALID_EMAIL) {
+			setError("Invalid Email");
+		}
+	};
+
+	const loginWithEmailAndPassword: SubmitHandler<IFormInput> = async (data) => {
+		// console.log(data);
+		const { email, password } = data;
+		try {
+			const userCredentials = await signInWithEmailAndPassword(
+				auth,
+				email,
+				password
+			);
+			const { email: userEmail, photoURL, displayName } = userCredentials.user;
+
+			console.log(userCredentials.user);
+			dispatch(SET_USER({ userEmail, displayName, photoURL }));
+			reset();
+			setTimeout(() => {
+				navigate("/");
+			}, 100);
+		} catch (error) {
+			handleError(error);
+		}
+	};
+
+	const handleSignInWithGoogle = async () => {
+		await signInWithPopup(auth, provider).then((result) => {
+			const { email: userEmail, photoURL, displayName } = result.user;
+			console.log(result.user);
+			dispatch(
+				SET_USER({
+					userEmail,
+					displayName,
+					photoURL,
+				})
+			);
+		});
+		setTimeout(() => {
+			navigate("/");
+		}, 300);
+	};
 
 	return (
 		<Container maxWidth="sm" sx={{ width: "400px", m: "auto" }}>
 			<Paper elevation={3} sx={{ py: 3, px: 2, width: "100%" }}>
-				<Typography variant="h6">Sign Up</Typography>
-				<Typography variant="body2">
-					stay updated on your professional world
-				</Typography>
+				<Typography variant="h6">Log In</Typography>
+				{error && (
+					<Typography variant="body2" color="crimson">
+						{error}
+					</Typography>
+				)}
 				<Box
-					onSubmit={handleSubmit(onSubmit)}
+					onSubmit={handleSubmit(loginWithEmailAndPassword)}
 					component="form"
 					sx={{
 						"& .MuiTextField-root": { my: 2, width: "100%" },
@@ -109,14 +185,14 @@ const Login = () => {
 					)}
 
 					<SignInBtn>
-						<Typography variant="body1">Sign In</Typography>
+						<Typography variant="body1">Log in</Typography>
 					</SignInBtn>
 
 					<Typography variant="body2" sx={{ textAlign: "center", my: 1 }}>
 						or
 					</Typography>
 				</Box>
-				<SignInBtn>
+				<SignInBtn onClick={handleSignInWithGoogle}>
 					<Typography
 						variant="body1"
 						sx={{
@@ -129,6 +205,12 @@ const Login = () => {
 						<Typography>Sign In with google</Typography>
 					</Typography>
 				</SignInBtn>
+				<Box sx={{ my: 1, textAlign: "center", fontSize: "1.2rem" }}>
+					Dont have an account?{" "}
+					<Link underline="always" component={RouterLink} to="/signIn">
+						Sign up
+					</Link>
+				</Box>
 			</Paper>
 		</Container>
 	);

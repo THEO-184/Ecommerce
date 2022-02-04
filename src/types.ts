@@ -18,10 +18,17 @@ export interface fireStoreProductType {
 	total: number;
 }
 
+export interface User {
+	userEmail: string | null;
+	photoURL: string | null;
+	displayName: string | null;
+}
+
 export interface ProductsState {
 	products: fireStoreProductType[];
 	loading: "loading" | "success" | "failed" | "idle";
 	isReloadItems: boolean;
+	userObj: User;
 }
 
 export interface CartState {

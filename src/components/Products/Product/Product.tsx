@@ -22,7 +22,6 @@ import db from "../../../firebase-config";
 const Product = (props: fireStoreProductType) => {
 	const { id, title, price, image, description, disabled } = props;
 	const PRODUCTS = useAppSelector(selectProducts);
-	const CART_ITEMS = useAppSelector(selectCartItems);
 	const dispatch = useAppDispatch();
 
 	// Add To Cart

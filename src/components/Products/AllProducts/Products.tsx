@@ -45,8 +45,6 @@ const Products = () => {
 		return () => unSuscribe();
 	}, [isReload]);
 
-	console.log(isReload);
-
 	if (LOADING === "loading") {
 		return (
 			<Box

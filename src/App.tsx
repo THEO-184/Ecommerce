@@ -4,7 +4,8 @@ import { makeStyles, ThemeProvider } from "@mui/styles";
 import { createTheme } from "@mui/material";
 import Products from "./components/Products/AllProducts/Products";
 import CartItems from "./components/Cart/CartItems";
-import Login from "./components/Login/Login";
+import Login from "./pages/authentication/Login";
+import SignIn from "./pages/authentication/SignIn";
 // Theme
 const theme = createTheme();
 const useStyles = makeStyles(() => ({
@@ -29,6 +30,8 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Products />}></Route>
 					<Route path="login" element={<Login />} />
+					<Route path="signin" element={<SignIn />} />
+
 					<Route path="products" element={<CartItems />} />
 					{/* <Route path="checkout" element={<Checkout />}></Route> */}
 				</Routes>
