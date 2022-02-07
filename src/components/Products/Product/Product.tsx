@@ -29,7 +29,7 @@ const Product = (props: fireStoreProductType) => {
 		// get document from firebase
 		const docRef = doc(db, "products", id);
 		updateDoc(docRef, {
-			isAdded: !disabled,
+			isAdded: true,
 		});
 
 		PRODUCTS.map((product) => {

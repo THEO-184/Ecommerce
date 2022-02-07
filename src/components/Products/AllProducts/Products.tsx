@@ -3,8 +3,6 @@ import { Container, Grid, Typography } from "@mui/material";
 import { useAppSelector, useAppDispatch } from "../../../app/hooks";
 import { fireStoreProductType } from "../../../types";
 import {
-	selectProducts,
-	selectLoading,
 	selectIsReload,
 	LOAD_ITEMS_TOCART,
 } from "../../../features/Products/ProductsSlice";
@@ -15,9 +13,9 @@ import { CircularProgress, Box } from "@mui/material";
 // import { Link } from "react-router-dom";
 
 const Products = () => {
-	const PRODUCTS = useAppSelector(selectProducts);
-	const LOADING = useAppSelector(selectLoading);
 	const isReload = useAppSelector(selectIsReload);
+	console.log(isReload);
+
 	const [Products, setProducts] = useState<fireStoreProductType[]>([]);
 	const dispatch = useAppDispatch();
 
@@ -43,9 +41,9 @@ const Products = () => {
 			dispatch(LOAD_ITEMS_TOCART(productsFire));
 		});
 		return () => unSuscribe();
-	}, [isReload]);
+	}, []);
 
-	if (LOADING === "loading") {
+	if (!Products.length) {
 		return (
 			<Box
 				sx={{
@@ -63,7 +61,7 @@ const Products = () => {
 	return (
 		<Box component="main" sx={{ mx: 2 }}>
 			<Grid container spacing={2}>
-				{PRODUCTS?.map((product) => (
+				{Products?.map((product) => (
 					<Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
 						<Product {...product} />
 					</Grid>

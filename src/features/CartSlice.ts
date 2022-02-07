@@ -2,7 +2,6 @@ import { RootState } from "./../app/store";
 import { fireStoreProductType, ProductType } from "./../types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CartState } from "../types";
-import { iteratorSymbol } from "immer/dist/internal";
 
 const initialState: CartState = {
 	cartItem: [],
@@ -64,6 +63,7 @@ const CartSlice = createSlice({
 			state.cartItem = [];
 			state.TotalItems = 0;
 			state.TotalPrice = 0;
+			return state;
 		},
 	},
 });

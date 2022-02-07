@@ -2,7 +2,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import ProductReducer from "../features/Products/ProductsSlice";
 import CartReducer from "../features/CartSlice";
-import storage from "redux-persist/lib/storage";
 import {
 	persistReducer,
 	FLUSH,
@@ -12,6 +11,7 @@ import {
 	PURGE,
 	REGISTER,
 } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 const persistConfig = {
 	key: "root",
@@ -21,10 +21,11 @@ const persistConfig = {
 
 const persistedCartReducer = persistReducer(persistConfig, CartReducer);
 const persistedProductsReducer = persistReducer(persistConfig, ProductReducer);
+
 export const store = configureStore({
 	reducer: {
-		products: ProductReducer,
-		cart: CartReducer,
+		products: persistedProductsReducer,
+		cart: persistedCartReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({

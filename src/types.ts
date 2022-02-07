@@ -16,6 +16,7 @@ export interface fireStoreProductType {
 	disabled: boolean;
 	price: number;
 	total: number;
+	createdAt?: string;
 }
 
 export interface User {

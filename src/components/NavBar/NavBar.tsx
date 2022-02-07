@@ -120,28 +120,25 @@ const NavBar = () => {
 					<Box sx={{ flexGrow: 1 }} />
 
 					<Box>
-						{location.pathname === "/" ? (
-							<IconButton
-								size="large"
-								aria-label="show 17 new notifications"
-								color="inherit"
-								component={RouterLink}
-								to="products"
+						<IconButton
+							size="large"
+							aria-label="show 17 new notifications"
+							color="inherit"
+							component={RouterLink}
+							to="products"
+						>
+							<Badge badgeContent={Total} color="error">
+								<ShoppingCartIcon />
+							</Badge>
+						</IconButton>
+						{location.pathname === "/products" && (
+							<Typography
+								variant="body2"
+								component={"span"}
+								sx={{ mr: 1, color: "#000" }}
 							>
-								<Badge badgeContent={Total} color="error">
-									<ShoppingCartIcon />
-								</Badge>
-							</IconButton>
-						) : (
-							location.pathname === "/products" && (
-								<Typography
-									variant="body2"
-									component={"span"}
-									sx={{ mr: 1, color: "#000" }}
-								>
-									TotalPrice: ${Math.abs(TOTALPRICE).toFixed(2)}
-								</Typography>
-							)
+								TotalPrice: ${Math.abs(TOTALPRICE).toFixed(2)}
+							</Typography>
 						)}
 
 						{user.userEmail ? (

@@ -1,14 +1,6 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-import {
-	doc,
-	updateDoc,
-	query,
-	orderBy,
-	onSnapshot,
-	where,
-} from "firebase/firestore";
+import { Link as RouterLink } from "react-router-dom";
+import { doc, updateDoc, query, onSnapshot, getDocs } from "firebase/firestore";
 import db, { colRef } from "../../firebase-config";
 import {
 	selectCartItems,
@@ -19,7 +11,6 @@ import {
 	CLEAR_CART,
 } from "../../features/CartSlice";
 import {
-	Button,
 	Card,
 	CardActions,
 	CardContent,
@@ -29,19 +20,15 @@ import {
 	Box,
 	Container,
 	Grid,
+	Link,
+	Button,
 } from "@mui/material";
-import {
-	LOAD_ITEMS_TOCART,
-	RELOAD_ITEMS,
-	selectIsReload,
-} from "../../features/Products/ProductsSlice";
+import { RELOAD_ITEMS } from "../../features/Products/ProductsSlice";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { flex } from "./Cart";
-import { fireStoreProductType } from "../../types";
-// export { flex } from "./Cart";
 
 // Compoent
 const CartItems = () => {
@@ -62,9 +49,7 @@ const CartItems = () => {
 
 	// delete Item;
 	const handleDeleteItem = (id: string): void => {
-		// delete item from cart
 		dispatch(DELETE_ITEM(id));
-
 		// reset product's disabled button from  firebase
 		const docRef = doc(db, "products", id);
 		updateDoc(docRef, {
@@ -80,8 +65,8 @@ const CartItems = () => {
 	// empty cart
 	const handleEmptyCart = (): any => {
 		const productsRef = query(colRef);
-		onSnapshot(productsRef, (snapshot) => {
-			snapshot.docs.map((document) => {
+		getDocs(productsRef).then((snapshot) => {
+			snapshot.docs.forEach((document) => {
 				const docRef = doc(db, "products", document.id);
 				updateDoc(docRef, {
 					isAdded: false,
@@ -93,18 +78,29 @@ const CartItems = () => {
 		setTimeout(() => {
 			navigate("/");
 		}, 500);
-		// return () => unSub();
 	};
 
 	if (!PRODUCTS.length) {
 		return (
-			<Typography variant="h4" sx={{ my: 2 }} textAlign={"center"}>
-				No Item in Cart
-			</Typography>
+			<>
+				<Box sx={{ my: 2 }} textAlign={"center"}>
+					<Button variant="contained" component={RouterLink} to="/">
+						Go back
+					</Button>
+				</Box>
+				<Typography variant="h4" sx={{ my: 2 }} textAlign={"center"}>
+					No Item in Cart
+				</Typography>
+			</>
 		);
 	}
 	return (
 		<Container maxWidth="lg">
+			<Box sx={{ my: 2 }} textAlign={"center"}>
+				<Button variant="contained" component={RouterLink} to="/">
+					Go back
+				</Button>
+			</Box>
 			<Typography variant="h4" sx={{ my: 2 }} textAlign={"center"}>
 				Cart Items
 			</Typography>
