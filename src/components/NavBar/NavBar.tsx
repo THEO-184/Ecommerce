@@ -24,6 +24,7 @@ import {
 	LinkProps as RouterLinkProps,
 } from "react-router-dom";
 import { selectTotalPrice } from "../../features/CartSlice";
+import { Link } from "@mui/material";
 
 const auth = getAuth(app);
 
@@ -114,9 +115,16 @@ const NavBar = () => {
 				sx={{ backgroundColor: "#fff", color: "InfoText" }}
 			>
 				<Toolbar>
-					<Typography variant="h6" noWrap component="div">
+					<Link
+						variant="h6"
+						underline="none"
+						noWrap
+						component={RouterLink}
+						to="/"
+						sx={{ color: "#000" }}
+					>
 						TheoCommerce
-					</Typography>
+					</Link>
 					<Box sx={{ flexGrow: 1 }} />
 
 					<Box>
@@ -133,7 +141,7 @@ const NavBar = () => {
 						</IconButton>
 						{location.pathname === "/products" && (
 							<Typography
-								variant="body2"
+								variant="body1"
 								component={"span"}
 								sx={{ mr: 1, color: "#000" }}
 							>

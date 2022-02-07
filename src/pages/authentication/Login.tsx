@@ -132,10 +132,16 @@ const Login = () => {
 
 	return (
 		<Container
-			maxWidth="sm"
-			sx={{ width: { xs: "90vw", md: "400px" }, m: "auto" }}
+			sx={{
+				display: "flex",
+				alignItems: "center",
+				justifyContent: "center",
+			}}
 		>
-			<Paper elevation={3} sx={{ py: 3, px: 2, width: "100%" }}>
+			<Paper
+				elevation={3}
+				sx={{ py: 3, px: 2, width: { xs: "90vw", md: "400px" }, m: "auto" }}
+			>
 				<Typography variant="h6">Log In</Typography>
 				{error && (
 					<Typography variant="body2" color="crimson">
