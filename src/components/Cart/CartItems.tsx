@@ -1,3 +1,4 @@
+import Modal from "../Popup";
 import { useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import { doc, updateDoc, query, onSnapshot, getDocs } from "firebase/firestore";
@@ -23,6 +24,7 @@ import {
 	Link,
 	Button,
 } from "@mui/material";
+import Popup from "reactjs-popup";
 import { RELOAD_ITEMS } from "../../features/Products/ProductsSlice";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
@@ -30,7 +32,7 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { flex } from "./Cart";
 
-// Compoent
+// Component
 const CartItems = () => {
 	const navigate = useNavigate();
 	const PRODUCTS = useAppSelector(selectCartItems);
@@ -106,15 +108,7 @@ const CartItems = () => {
 			</Typography>
 
 			<Box sx={{ position: "fixed", top: "70px", right: "10px", mb: 4 }}>
-				<Button
-					color="error"
-					sx={{ mr: 2, my: 1 }}
-					variant="contained"
-					size="small"
-					onClick={handleEmptyCart}
-				>
-					EMPTY CART
-				</Button>
+				<Modal handleEmptyCart={handleEmptyCart} />
 			</Box>
 
 			<Grid container spacing={2} sx={{ ...flex, justifyContent: "center" }}>

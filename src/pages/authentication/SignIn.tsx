@@ -106,7 +106,7 @@ const SignIn = () => {
 	};
 
 	return (
-		<Container maxWidth="sm" sx={{ width: "400px", m: "auto" }}>
+		<Container sx={{ width: "50vw", mx: "auto" }}>
 			<Paper elevation={3} sx={{ py: 3, px: 2, width: "100%" }}>
 				<Typography variant="h6">Sign In</Typography>
 				{error && (
