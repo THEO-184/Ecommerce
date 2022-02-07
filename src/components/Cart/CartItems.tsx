@@ -107,7 +107,7 @@ const CartItems = () => {
 				Cart Items
 			</Typography>
 
-			<Box sx={{ position: "fixed", top: "70px", right: "10px", mb: 4 }}>
+			<Box sx={{ position: "fixed", top: "85px", right: "10px", mb: 4 }}>
 				<Modal handleEmptyCart={handleEmptyCart} />
 			</Box>
 
