@@ -201,7 +201,7 @@ const Login = () => {
 						or
 					</Typography>
 				</Box>
-				<SignInBtn onClick={handleSignInWithGoogle}>
+				{/* <SignInBtn onClick={handleSignInWithGoogle}>
 					<Typography
 						variant="body1"
 						sx={{
@@ -213,7 +213,7 @@ const Login = () => {
 						<GoogleIcon sx={{ px: 1 }} />
 						<Typography>Sign In with google</Typography>
 					</Typography>
-				</SignInBtn>
+				</SignInBtn> */}
 				<Box sx={{ my: 1, textAlign: "center", fontSize: "1.2rem" }}>
 					Dont have an account?{" "}
 					<Link underline="always" component={RouterLink} to="/signIn">
